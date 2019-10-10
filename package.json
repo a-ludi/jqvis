@@ -1,0 +1,26 @@
+{
+  "name": "jqvis",
+  "version": "0.0.1",
+  "description": "A simplistic GUI wrapper for jq.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arne Ludwig <arne.ludwig@posteo.de>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "ace-builds": "^1.4.6",
+    "bootstrap": "^4.3.1",
+    "highlight.js": "^9.15.10",
+    "jquery": "^3.4.1",
+    "lodash.isempty": "^4.4.0",
+    "popper.js": "^1.15.0"
+  },
+  "devDependencies": {
+    "electron": "^6.0.12"
+  },
+  "peerDependencies": {
+    "electron": "^6.0.12"
+  }
+}

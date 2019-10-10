@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>jqVis</title>
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/highlight.js/styles/github.css">
+    <script>
+        delete module.exports
+    </script>
+
+    <style type="text/css">
+       .alert {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+        }
+
+        #query-editor {
+            width: 100%;
+            height: 20ex;
+        }
+
+        .bg-shaded {
+            background-color: #e1e1e1 !important;
+        }
+    </style>
+</head>
+<body class="bg-shaded">
+    <div class="shadow mb-3 px-3 border-bottom bg-light">
+        <div class="form-group pt-3">
+            <div class="row">
+                <label class="col-sm-1 col-form-label text-secondary font-weight-bold" for="input-file">JSON file:</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="file-name" name="file-name" readonly="readonly">
+                    <input type="file" class="d-none" id="input-file" name="input-file" accept="application/json">
+                </div>
+            </div>
+        </div>
+        <form id="query-form">
+            <div class="form-group">
+                <label class="text-secondary font-weight-bold">Query:</label>
+                <div id="query-editor" class="border"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-check-inline">
+                    <input id="flags-compact" type="checkbox" class="form-check-input" name="flags[compact]">
+                    <label for="flags-compact" class="form-check-label">Compact output</label>
+                </div>
+                <div class="form-check-inline">
+                    <input id="flags-slurp" type="checkbox" class="form-check-input" name="flags[slurp]">
+                    <label for="flags-slurp" class="form-check-label">Slurp</label>
+                </div>
+                <div class="form-check-inline">
+                    <input id="flags-raw-output" type="checkbox" class="form-check-input" name="flags[raw-output]">
+                    <label for="flags-raw-output" class="form-check-label">Raw output</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary form-control" value="Send">
+            </div>
+        </form>
+        <div class="form-group pl-3">
+            <form id="save-form">
+                <div class="row">
+                    <div class="col-auto px-0 pr-3">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Load query
+                            </button>
+                            <div class="dropdown-menu" id="saved-queries" aria-labelledby="dropdownMenuButton"></div>
+                        </div>
+                    </div>
+                    <input type="text" id="save-name" class="form-control col-sm" placeholder="Name to save query under…">
+                    <div class="col-auto">
+                        <input type="submit" class="btn btn-secondary form-control" value="Save">
+                    </div>
+                    <div class="col-auto pl-0">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-outline-danger form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Delete query
+                            </button>
+                            <div class="dropdown-menu" id="saved-queries-delete" aria-labelledby="dropdownMenuButton"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="px-3">
+        <div id="error-message" class="alert alert-danger" role="alert"></div>
+        <div id="success-message" class="alert alert-success" role="alert"></div>
+        <label class="text-secondary font-weight-bold">Result:</label>
+        <pre class="card"><code id="output" class="json card-body"></code></pre>
+    </div>
+    <script type="text/javascript">
+        const $ = require('jquery');
+        bootstrap = require('bootstrap');
+
+        $(function () { require('./window.js'); });
+    </script>
+</body>
+</html>
