@@ -21,8 +21,11 @@ Table of Contents
 Install
 --------
 
-Be sure to install [`jq`](https://stedolan.github.io/jq/). Then install and
-start with
+Be sure to install [`jq`](https://stedolan.github.io/jq/).
+
+Quick installation via `npm install -g jqvis` and launch with `jqvis`.
+
+For development install and start with:
 
 ```
 git clone https://github.com/a-ludi/jqvis.git
@@ -34,7 +37,7 @@ npm start
 Usage
 -----
 
-1. Start with `npm start`.
+1. Start with `jqvis` or `npm start` (see [Install section](#install)).
 2. Select a file by clicking "Select JSON file…".
 3. Enter a `jq` query into the editor
 4. Optionally, select `jq` options to control input and output.
