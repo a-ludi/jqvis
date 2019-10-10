@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "postinstall": "node adjust-css-paths.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
