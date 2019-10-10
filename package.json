@@ -4,8 +4,11 @@
   "description": "A simplistic GUI wrapper for jq.",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "jqvis": "electron ."
   },
   "author": "Arne Ludwig <arne.ludwig@posteo.de>",
   "repository": "https://github.com/a-ludi/jqvis",
