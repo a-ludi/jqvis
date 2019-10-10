@@ -2,14 +2,13 @@
   "name": "jqvis",
   "version": "0.0.4",
   "description": "A simplistic GUI wrapper for jq.",
-  "main": "main.js",
   "scripts": {
     "start": "electron .",
     "postinstall": "node adjust-css-paths.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "jqvis": "./main.js"
+    "jqvis": "./jqvis.sh"
   },
   "author": "Arne Ludwig <arne.ludwig@posteo.de>",
   "repository": "https://github.com/a-ludi/jqvis",
