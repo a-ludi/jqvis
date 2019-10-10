@@ -27,6 +27,7 @@ start with
 ```
 git clone https://github.com/a-ludi/jqvis.git
 cd jqvis
+npm install
 npm start
 ```
 
