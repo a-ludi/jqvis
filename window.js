@@ -127,7 +127,7 @@ function updateStoredQueries()
 
 function load() {
     setInputFile(localStorage.getItem('inputFile'));
-    query = localStorage.getItem('query');
+    query = localStorage.getItem('lastQuery');
     jqOptions = JSON.parse(localStorage.getItem('jqOptions') || '{}');
 
     syncOptionCheckboxes();
