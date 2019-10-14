@@ -257,6 +257,9 @@ function load() {
         {
             let result = await callJq(inputFile, query, jqOptions);
 
+            if (!result)
+                return;
+
             if (result.length < 10 * 1024 * 1024)
                 $('#output').html(hljs.highlight('json', result).value);
             else
