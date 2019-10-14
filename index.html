@@ -42,6 +42,12 @@
         {
             display: initial;
         }
+
+        .dismiss-alert
+        {
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-shaded">
@@ -110,8 +116,19 @@
         </div>
     </div>
     <div class="px-3">
-        <div id="error-message" class="alert alert-danger" role="alert"></div>
-        <div id="success-message" class="alert alert-success" role="alert"></div>
+        <div class="alert alert-danger" role="alert">
+            <div class="row">
+                <div id="error-message" class="col-auto"></div>
+                <div class="dismiss-alert col-auto">&times;</div>
+            </div>
+        </div>
+        <div class="alert alert-success" role="alert">
+            <div class="row">
+                <div id="success-message" class="col-auto"></div>
+                <div class="dismiss-alert col-auto">&times;</div>
+            </div>
+        </div>
+
         <label class="text-secondary font-weight-bold">Result:</label>
         <pre class="card"><code id="output" class="json card-body"></code></pre>
     </div>

@@ -11,6 +11,7 @@ let editor;
 let inputFile;
 let query;
 let jqOptions;
+let alertsInitialized;
 let isLoading;
 
 const jqFlags = {
@@ -71,15 +72,33 @@ function unsetLoading()
 }
 
 
+function initAlerts()
+{
+    if (alertsInitialized)
+        return;
 
-    return stdout;
+    $('.alert .dismiss-alert')
+        .click(function (event) {
+            console.error($(event.target).parents('.alert'));
+
+            $(event.target)
+                .parents('.alert')
+                .clearQueue()
+                .fadeOut(200);
+
+            event.preventDefault();
+        });
+
+    alertsInitialized = true;
 }
 
 
 function showError(message, timeout=3000)
 {
+    initAlerts();
     $('#error-message')
         .text(`Error: ${message}`)
+        .parents('.alert')
         .fadeIn(1)
         .delay(timeout)
         .fadeOut(1000);
@@ -88,8 +107,10 @@ function showError(message, timeout=3000)
 
 function showSuccess(message, timeout=3000)
 {
+    initAlerts();
     $('#success-message')
         .text(message)
+        .parents('.alert')
         .fadeIn(1)
         .delay(timeout)
         .fadeOut(1000);
