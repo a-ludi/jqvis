@@ -3,7 +3,9 @@ jqVis
 
 ![jqVis](./icon.png?sanitize=true&raw=true)
 
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg)](https://github.com/RichardLitt/standard-readme)
+[![npm](https://img.shields.io/npm/v/jqvis)](https://www.npmjs.com/package/jqvis)
+![NPM](https://img.shields.io/npm/l/jqvis)
 
 > A simplistic GUI wrapper for `jq`.
 
