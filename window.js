@@ -11,6 +11,7 @@ let editor;
 let inputFile;
 let query;
 let jqOptions;
+let isLoading;
 
 const jqFlags = {
     compact: '--compact-output',
@@ -21,19 +22,55 @@ const jqFlags = {
 
 async function callJq(file, query, options = {})
 {
+    if (isLoading)
+        return;
+
+    setLoading();
+
     let flags = Object
         .entries(options)
         .map(([optionName, isActive]) => isActive
             ? jqFlags[optionName]
             : null)
         .filter((flag) => flag !== null);
-    let { stdout, stderr } = await execFile('jq', flags.concat([
-        query,
-        file,
-    ]));
 
-    if (stderr)
-        throw new Error(stderr);
+    try
+    {
+        let { stdout, stderr } = await execFile('jq', flags.concat([
+            query,
+            file,
+        ]), { maxBuffer: 100 * 1024 * 1024 });
+
+        if (stderr)
+            throw new Error(stderr);
+
+        unsetLoading();
+
+        return stdout;
+    }
+    catch (err)
+    {
+        unsetLoading();
+
+        throw err;
+    }
+}
+
+
+function setLoading()
+{
+    isLoading = true;
+    $('#query-form').addClass('loading');
+}
+
+
+function unsetLoading()
+{
+    $('#query-form').removeClass('loading');
+    isLoading = false;
+}
+
+
 
     return stdout;
 }

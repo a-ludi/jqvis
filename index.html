@@ -27,6 +27,21 @@
         .bg-shaded {
             background-color: #e1e1e1 !important;
         }
+
+        .loading .action-send
+        {
+            display: none;
+        }
+
+        .action-loading
+        {
+            display: none;
+        }
+
+        .loading .action-loading
+        {
+            display: initial;
+        }
     </style>
 </head>
 <body class="bg-shaded">
@@ -60,7 +75,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-primary form-control" value="Send">
+                <input type="submit" class="action-send btn btn-primary form-control" value="Send">
+                <button class="action-loading btn btn-primary form-control" type="button" disabled="">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">Loading...</span>
+                </button>
             </div>
         </form>
         <div class="form-group pl-3">
