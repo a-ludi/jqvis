@@ -236,7 +236,10 @@ function load() {
         {
             let result = await callJq(inputFile, query, jqOptions);
 
-            $('#output').html(hljs.highlight('json', result).value);
+            if (result.length < 10 * 1024 * 1024)
+                $('#output').html(hljs.highlight('json', result).value);
+            else
+                $('#output').text(result);
 
             localStorage.setItem('inputFile', inputFile);
             localStorage.setItem('lastQuery', query);
