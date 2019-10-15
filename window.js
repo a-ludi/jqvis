@@ -183,6 +183,34 @@ function updateStoredQueries()
     }
 }
 
+function initGrips(editors)
+{
+    $('.query-editor-grip').on('mousedown', (event) => {
+        const handle = $(event.target);
+        const resizables = $(handle.attr('for'));
+        let dragLastX = event.pageX;
+        let dragLastY = event.pageY;
+
+        $('body').on('mousemove.grip-drag', '*', (event) => {
+            const deltaX = event.pageX - dragLastX;
+            const deltaY = event.pageY - dragLastY;
+
+            resizables.height((index, height) => height + deltaY);
+            editors.forEach((editor) => editor.resize());
+
+            event.preventDefault();
+            dragLastX = event.pageX;
+            dragLastY = event.pageY;
+        });
+
+        $('body').one('mouseup', (event) => {
+            $('body').off('mousemove.grip-drag', '*');
+        });
+    });
+
+
+}
+
 function load() {
     setInputFile(localStorage.getItem('inputFile'));
     query = localStorage.getItem('lastQuery');
@@ -213,6 +241,7 @@ function load() {
         query = editor.getValue();
     });
     editor.focus();
+    initGrips([editor]);
 
     // Save query under name
     $('#save-form').submit(function(event) {
