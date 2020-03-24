@@ -289,7 +289,7 @@ function load() {
             if (!result)
                 return;
 
-            if (result.length < 10 * 1024 * 1024)
+            if (!jqOptions['raw-output'] && result.length < 10 * 1024 * 1024)
                 $('#output').html(hljs.highlight('json', result).value);
             else
                 $('#output').text(result);
