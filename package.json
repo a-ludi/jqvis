@@ -23,9 +23,9 @@
     "popper.js": "^1.15.0"
   },
   "devDependencies": {
-    "electron": "^6.0.12"
+    "electron": "^7.2.4"
   },
   "peerDependencies": {
-    "electron": "^6.0.12"
+    "electron": "^7.2.4"
   }
 }
