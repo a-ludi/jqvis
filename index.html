@@ -69,6 +69,12 @@
             font-weight: bold;
             cursor: pointer;
         }
+
+        #copy-result-button
+        {
+            margin-left: 1em;
+            opacity: 0;
+        }
     </style>
 </head>
 <body class="bg-shaded">
@@ -153,6 +159,7 @@
         </div>
 
         <label class="text-secondary font-weight-bold">Result:</label>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="copy-result-button">Copy result</button>
         <pre class="card"><code id="output" class="json card-body"></code></pre>
     </div>
     <script type="text/javascript">

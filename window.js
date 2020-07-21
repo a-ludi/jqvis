@@ -13,6 +13,7 @@ let query;
 let jqOptions;
 let alertsInitialized;
 let isLoading;
+let lastResult = null;
 
 const jqFlags = {
     compact: '--compact-output',
@@ -297,11 +298,25 @@ function load() {
             localStorage.setItem('inputFile', inputFile);
             localStorage.setItem('lastQuery', query);
             localStorage.setItem('jqOptions', JSON.stringify(jqOptions));
+
+            if (lastResult === null)
+                $('#copy-result-button').css('opacity', 100);
+
+            lastResult = result;
         }
         catch (err)
         {
             return showError(err, 10000);
         }
+    });
+
+    $('#copy-result-button').click(async function(event) {
+        if (isEmpty(lastResult))
+            return;
+
+        await navigator.clipboard.writeText(lastResult);
+
+        showSuccess("Result copied to clipboard.");
     });
 }
 
