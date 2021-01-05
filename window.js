@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const child_process = require('child_process');
 const execFile = promisify(child_process.execFile);
 const isEmpty = require('lodash.isempty');
-const hljs = require('highlight.js/lib/highlight');
+const hljs = require('highlight.js');
 hljs.registerLanguage('json', require('highlight.js/lib/languages/json'));
 const $ = require('jquery');
 const ace = require('ace-builds');
