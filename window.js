@@ -1,4 +1,6 @@
 const { promisify } = require('util');
+const { ipcRenderer } = require('electron');
+const { dirname } = require('path');
 const child_process = require('child_process');
 const execFile = promisify(child_process.execFile);
 const isEmpty = require('lodash.isempty');
@@ -212,6 +214,21 @@ function initGrips(editors)
 
 }
 
+function openFileDialog() {
+    let options = {
+        filters: [
+            { name: "JSON documents", extensions: ["json"] },
+            { name: "All Files", extensions: ["*"] },
+        ],
+        properties: ["openFile"],
+    };
+
+    if (!isEmpty(inputFile))
+        options.defaultPath = dirname(inputFile);
+
+    ipcRenderer.send('openFile', options);
+}
+
 function load() {
     setInputFile(localStorage.getItem('inputFile'));
     query = localStorage.getItem('lastQuery');
@@ -221,11 +238,10 @@ function load() {
     updateStoredQueries();
 
     // Register input file
-    $('#file-name').click(function() {
-        $('#input-file').click();
-    });
-    $('#input-file').on('input propertychange', function() {
-        setInputFile(this.files[0].path);
+    $('#file-name').click(openFileDialog);
+
+    ipcRenderer.on('fileNames', (event, fileNames) => {
+        setInputFile(fileNames[0]);
     });
 
     ['compact', 'slurp', 'raw-output'].forEach((optionName) => {
@@ -287,8 +303,8 @@ function load() {
         {
             let result = await callJq(inputFile, query, jqOptions);
 
-            if (!result)
-                return;
+            if (isEmpty(result))
+                return showSuccess('Empty output');
 
             if (!jqOptions['raw-output'] && result.length < 10 * 1024 * 1024)
                 $('#output').html(hljs.highlight('json', result).value);
