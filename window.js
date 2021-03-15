@@ -238,10 +238,14 @@ function load() {
     updateStoredQueries();
 
     // Register input file
-    $('#file-name').click(openFileDialog);
+    $('#select-file').click(openFileDialog);
 
     ipcRenderer.on('fileNames', (event, fileNames) => {
         setInputFile(fileNames[0]);
+    });
+
+    $('#file-name').change(function () {
+        setInputFile($(this).val());
     });
 
     ['compact', 'slurp', 'raw-output'].forEach((optionName) => {
