@@ -303,7 +303,9 @@ function load() {
         {
             let result = await callJq(inputFile, query, jqOptions);
 
-            if (isEmpty(result))
+            if (typeof(result) === "undefined")
+                return; // jq was called twice
+            else if (isEmpty(result))
                 return showSuccess('Empty output');
 
             if (!jqOptions['raw-output'] && result.length < 10 * 1024 * 1024)
