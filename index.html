@@ -103,8 +103,8 @@
             </div>
             <div class="form-group">
                 <div class="form-check-inline">
-                    <input id="flags-compact" type="checkbox" class="form-check-input" name="flags[compact]">
-                    <label for="flags-compact" class="form-check-label">Compact output</label>
+                    <input id="flags-compact-output" type="checkbox" class="form-check-input" name="flags[compact-output]">
+                    <label for="flags-compact-output" class="form-check-label">Compact output</label>
                 </div>
                 <div class="form-check-inline">
                     <input id="flags-slurp" type="checkbox" class="form-check-input" name="flags[slurp]">
@@ -113,6 +113,27 @@
                 <div class="form-check-inline">
                     <input id="flags-raw-output" type="checkbox" class="form-check-input" name="flags[raw-output]">
                     <label for="flags-raw-output" class="form-check-label">Raw output</label>
+                </div>
+                <a class="btn btn-sm btn-link dropdown-toggle" data-toggle="collapse" href="#more-flags" role="button" aria-expanded="false" aria-controls="more-flags">More flags&hellip;</a>
+                <div class="collapse card mt-2" id="more-flags">
+                    <div class="form-group m-2 ml-3">
+                        <div class="form-check-inline">
+                            <input id="flags-sort-keys" type="checkbox" class="form-check-input" name="flags[sort-keys]">
+                            <label for="flags-sort-keys" class="form-check-label">Sort keys</label>
+                        </div>
+                        <div class="form-check-inline">
+                            <input id="flags-ascii-output" type="checkbox" class="form-check-input" name="flags[ascii-output]">
+                            <label for="flags-ascii-output" class="form-check-label">ASCII output</label>
+                        </div>
+                        <div class="form-check-inline">
+                            <input id="flags-join-output" type="checkbox" class="form-check-input" name="flags[join-output]">
+                            <label for="flags-join-output" class="form-check-label">Join raw output</label>
+                        </div>
+                        <div class="form-check-inline">
+                            <input id="flags-exit-status" type="checkbox" class="form-check-input" name="flags[exit-status]">
+                            <label for="flags-exit-status" class="form-check-label">Exit with status</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">

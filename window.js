@@ -17,11 +17,16 @@ let alertsInitialized;
 let isLoading;
 let lastResult = null;
 
-const jqFlags = {
-    compact: '--compact-output',
-    slurp: '--slurp',
-    'raw-output': '--raw-output',
-};
+const jqFlags = [
+    'compact-output',
+    'slurp',
+    'raw-output',
+    'sort-keys',
+    'sort-keys',
+    'ascii-output',
+    'join-output',
+    'exit-status',
+];
 
 
 async function callJq(file, query, options = {})
@@ -34,7 +39,7 @@ async function callJq(file, query, options = {})
     let flags = Object
         .entries(options)
         .map(([optionName, isActive]) => isActive
-            ? jqFlags[optionName]
+            ? "--" + optionName
             : null)
         .filter((flag) => flag !== null);
 
@@ -229,7 +234,45 @@ function openFileDialog() {
     ipcRenderer.send('openFile', options);
 }
 
+const migrations = [
+    function useRawJqOptionsNames()
+    {
+        jqOptions = JSON.parse(localStorage.getItem('jqOptions') || '{}');
+
+        if ("compact" in jqOptions)
+        {
+            jqOptions["compact-output"] = jqOptions["compact"];
+            delete jqOptions["compact"];
+        }
+
+        localStorage.setItem(`jqOptions`, JSON.stringify(jqOptions));
+    },
+];
+
+function migrateLocalStorage() {
+    const fulfilledMigrations = JSON.parse(localStorage.getItem('fulfilledMigrations') || '{}');
+
+    migrations.forEach(migration => {
+        try
+        {
+            if (!(migration.name in fulfilledMigrations))
+            {
+                migration();
+                fulfilledMigrations[migration.name] = true;
+            }
+        }
+        catch (err)
+        {
+            showError("Failed to migrate local storage: " + err);
+        }
+    });
+
+    localStorage.setItem(`fulfilledMigrations`, JSON.stringify(fulfilledMigrations));
+}
+
 function load() {
+    migrateLocalStorage();
+
     setInputFile(localStorage.getItem('inputFile'));
     query = localStorage.getItem('lastQuery');
     jqOptions = JSON.parse(localStorage.getItem('jqOptions') || '{}');
@@ -248,7 +291,7 @@ function load() {
         setInputFile($(this).val());
     });
 
-    ['compact', 'slurp', 'raw-output'].forEach((optionName) => {
+    jqFlags.forEach((optionName) => {
         $('#flags-' + optionName).on('change', function() {
             jqOptions[optionName] = this.checked;
         });
