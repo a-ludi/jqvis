@@ -234,6 +234,23 @@ function openFileDialog() {
     ipcRenderer.send('openFile', options);
 }
 
+function writeFileDialog(contents) {
+    const options = {
+        filters: [
+            { name: "JSON documents", extensions: ["json"] },
+            { name: "All Files", extensions: ["*"] },
+        ],
+    };
+
+    if (jqOptions['raw-output'])
+        options.filters.reverse();
+
+    if (!isEmpty(inputFile))
+        options.defaultPath = dirname(inputFile);
+
+    ipcRenderer.send('saveFile', contents, options);
+}
+
 const migrations = [
     function useRawJqOptionsNames()
     {
@@ -364,8 +381,7 @@ function load() {
             localStorage.setItem('lastQuery', query);
             localStorage.setItem('jqOptions', JSON.stringify(jqOptions));
 
-            if (lastResult === null)
-                $('#copy-result-button').css('opacity', 100);
+            $('.result-actions').css('display', 'inline');
 
             lastResult = result;
         }
@@ -382,6 +398,17 @@ function load() {
         await navigator.clipboard.writeText(lastResult);
 
         showSuccess("Result copied to clipboard.");
+    });
+
+    $('#save-result-button').click(async function(event) {
+        writeFileDialog(lastResult);
+    });
+
+    ipcRenderer.on('fileWritten', (event, { fileName, error, cancelled }) => {
+        if (error === null && !cancelled)
+            showSuccess("Result saved to '" + fileName + "'.");
+        else if (error !== null)
+            showError("error saving file: " + error);
     });
 }
 

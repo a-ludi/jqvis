@@ -4,7 +4,7 @@ const {
   dialog,
   ipcMain,
 } = require('electron');
-const fs = require('fs');
+const { writeFile } = require('fs').promises;
 let win;
 
 function createWindow()
@@ -31,6 +31,33 @@ ipcMain.on('openFile', async (event, options) => {
 
   if (!canceled)
     event.reply('fileNames', filePaths);
+});
+
+ipcMain.on('saveFile', async (event, contents, options) => {
+  console.log('Received event `saveFile`');
+  const { canceled, filePath } = await dialog.showSaveDialog(win, options);
+  const reply = {
+    cancelled: canceled,
+    fileName: filePath,
+    error: null,
+  };
+
+  if (!canceled)
+  {
+    try
+    {
+      if (typeof(contents) === 'function')
+        await writeFile(filePath, contents());
+      else
+        await writeFile(filePath, contents);
+    }
+    catch (err)
+    {
+      reply.error = err;
+    }
+  }
+
+  event.reply('fileWritten', reply);
 });
 
 app.on('ready', createWindow);
