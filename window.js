@@ -2,7 +2,6 @@ const { promisify } = require('util');
 const { ipcRenderer } = require('electron');
 const { dirname } = require('path');
 const child_process = require('child_process');
-const execFile = promisify(child_process.execFile);
 const isEmpty = require('lodash.isempty');
 const hljs = require('highlight.js');
 hljs.registerLanguage('json', require('highlight.js/lib/languages/json'));
@@ -29,12 +28,13 @@ const jqFlags = [
 ];
 
 
+let jqProcess = null;
+
+
 async function callJq(file, query, options = {})
 {
     if (isLoading)
         return;
-
-    setLoading();
 
     let flags = Object
         .entries(options)
@@ -45,23 +45,50 @@ async function callJq(file, query, options = {})
 
     try
     {
-        let { stdout, stderr } = await execFile('jq', flags.concat([
-            query,
-            file,
-        ]), { maxBuffer: 100 * 1024 * 1024 });
+        setLoading();
+        let { stdout, stderr } = await new Promise((resolve, reject) => {
+            jqProcess = child_process.execFile('jq', flags.concat([
+                query,
+                file,
+            ]), { maxBuffer: 100 * 1024 * 1024 }, (error, stdout, stderr) => {
+                if (error)
+                    reject(error);
+                else
+                    resolve({ stdout, stderr });
+            });
+        });
 
         if (stderr)
             throw new Error(stderr);
 
+        jqProcess = null;
         unsetLoading();
 
         return stdout;
     }
     catch (err)
     {
+        jqProcess = null;
         unsetLoading();
 
+        if (jqProcess === null)
+            return showWarning("JQ has been cancelled.");
+
         throw err;
+    }
+}
+
+
+function cancelJq()
+{
+    if (!isLoading || jqProcess === null)
+        return;
+
+    if (jqProcess.kill()) {
+        jqProcess = null;
+        unsetLoading();
+    } else {
+        throw new Error("Could not stop the JQ process.");
     }
 }
 
@@ -103,26 +130,39 @@ function initAlerts()
 
 function showError(message, timeout=3000)
 {
-    initAlerts();
-    $('#error-message')
-        .text(`Error: ${message}`)
-        .parents('.alert')
-        .fadeIn(1)
-        .delay(timeout)
-        .fadeOut(1000);
-    console.error(message);
+    showAlert('danger', message, timeout);
 }
 
 function showSuccess(message, timeout=3000)
 {
+    showAlert('success', message, timeout);
+}
+
+function showWarning(message, timeout=3000)
+{
+    showAlert('warning', message, timeout);
+}
+
+
+function showAlert(level, message, timeout=3000)
+{
     initAlerts();
-    $('#success-message')
+    $('#alert-message')
         .text(message)
         .parents('.alert')
+        .removeClass(
+            "alert-primary alert-secondary alert-success alert-danger " +
+            "alert-warning alert-info alert-light alert-dark"
+        )
+        .addClass(`alert-${level}`)
         .fadeIn(1)
         .delay(timeout)
         .fadeOut(1000);
-    console.log(message);
+
+    if (level === "danger")
+        console.error(message);
+    else
+        console.log(message);
 }
 
 function setInputFile(filename)
@@ -384,6 +424,20 @@ function load() {
             $('.result-actions').css('display', 'inline');
 
             lastResult = result;
+        }
+        catch (err)
+        {
+            return showError(err, 10000);
+        }
+    });
+
+    // Cancel jq
+    $('#query-form .action-cancel').click(function(event) {
+        event.preventDefault();
+
+        try
+        {
+            cancelJq();
         }
         catch (err)
         {
