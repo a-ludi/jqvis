@@ -17,6 +17,7 @@
   "dependencies": {
     "ace-builds": "^1.4.12",
     "bootstrap": "^4.5.3",
+    "font-awesome": "^4.7.0",
     "highlight.js": "^10.5.0",
     "jquery": "^3.5.1",
     "lodash.isempty": "^4.4.0",

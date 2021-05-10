@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/highlight.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <script>
         delete module.exports
     </script>
@@ -190,12 +191,25 @@
         </div>
 
         <label class="text-secondary font-weight-bold">Result:</label>
-        <span class="result-actions">
-            <button type="button" class="btn btn-outline-secondary btn-sm ml-2" id="copy-result-button">Copy result</button>
-            <button type="button" class="btn btn-outline-success btn-sm ml-2" id="save-result-button">Save result to file</button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-4" id="clear-result-button">Clear result</button>
+        <span class="result-actions btn-toolbar mx-2" role="toolbar" aria-label="Result actions">
+            <span class="btn-group" role="group" aria-label="Store result actions">
+                <button type="button" class="btn btn-primary" id="copy-result-button" title="Copy result to clipboard">
+                    <i class="fa fa-clipboard" aria-hidden="true"></i>
+                    <span class="sr-only">Copy result to clipboard</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="save-result-button" title="Save result to file">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    <span class="sr-only">Save result to file</span>
+                </button>
+            </span>
+            <span class="btn-group ml-2" role="group" aria-label="Clear result actions">
+                <button type="button" class="btn btn-outline-danger" id="clear-result-button" title="Clear result">
+                    <i class="fa fa-eraser" aria-hidden="true"></i>
+                    <span class="sr-only">Clear result</span>
+                </button>
+            </span>
         </span>
-        <pre class="card"><code id="output" class="json card-body"></code></pre>
+        <pre class="card mt-3"><code id="output" class="json card-body"></code></pre>
     </div>
     <script type="text/javascript">
         const $ = require('jquery');
