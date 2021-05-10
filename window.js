@@ -68,11 +68,12 @@ async function callJq(file, query, options = {})
     }
     catch (err)
     {
-        jqProcess = null;
         unsetLoading();
 
         if (jqProcess === null)
             return showWarning("JQ has been cancelled.");
+
+        jqProcess = null;
 
         throw err;
     }
