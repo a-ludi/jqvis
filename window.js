@@ -459,6 +459,10 @@ function load() {
         writeFileDialog(lastResult);
     });
 
+    $('#clear-result-button').click(async function(event) {
+        $('#output').text('');
+    });
+
     ipcRenderer.on('fileWritten', (event, { fileName, error, cancelled }) => {
         if (error === null && !cancelled)
             showSuccess("Result saved to '" + fileName + "'.");
