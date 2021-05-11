@@ -292,6 +292,15 @@ function writeFileDialog(contents) {
     ipcRenderer.send('saveFile', contents, options);
 }
 
+function showResult(result) {
+    if (!jqOptions['raw-output'] && result.length < 10 * 1024 * 1024)
+        $('#output').html(hljs.highlight('json', result).value);
+    else
+        $('#output').text(result);
+
+    $('.result-actions').css('display', 'inline');
+}
+
 const migrations = [
     function useRawJqOptionsNames()
     {
@@ -413,16 +422,11 @@ function load() {
             else if (isEmpty(result))
                 return showSuccess('Empty output');
 
-            if (!jqOptions['raw-output'] && result.length < 10 * 1024 * 1024)
-                $('#output').html(hljs.highlight('json', result).value);
-            else
-                $('#output').text(result);
+            showResult(result);
 
             localStorage.setItem('inputFile', inputFile);
             localStorage.setItem('lastQuery', query);
             localStorage.setItem('jqOptions', JSON.stringify(jqOptions));
-
-            $('.result-actions').css('display', 'inline');
 
             lastResult = result;
         }
@@ -459,9 +463,12 @@ function load() {
         writeFileDialog(lastResult);
     });
 
-    $('#clear-result-button').click(async function(event) {
-        $('#output').text('');
-    });
+    $('#hide-result-toggle').change(function() {
+        if ($(this).prop('checked'))
+            $('#output').hide();
+        else
+            $('#output').show();
+    })
 
     ipcRenderer.on('fileWritten', (event, { fileName, error, cancelled }) => {
         if (error === null && !cancelled)

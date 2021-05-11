@@ -9,9 +9,16 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/highlight.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <script>
+    <link rel="stylesheet" href="./node_modules/bootstrap-toggle/css/bootstrap-toggle.min.css">
+    <script type="text/javascript">
         delete module.exports
+        const jQuery = require('jquery');
+        const $ = jQuery;
+        bootstrap = require('bootstrap');
+
+        $(function () { require('./window.js'); });
     </script>
+    <script src="./node_modules/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
 
     <style type="text/css">
        .alert {
@@ -73,7 +80,16 @@
 
         .result-actions
         {
-            display: none;
+            display: inline;
+            /*display: none;*/
+        }
+
+        /* FIXES old module bootstrap-toggle */
+        .btn-default
+        {
+            color: #212529;
+            background-color: #f8f9fa;
+            border-color: #f8f9fa;
         }
     </style>
 </head>
@@ -202,20 +218,18 @@
                     <span class="sr-only">Save result to file</span>
                 </button>
             </span>
-            <span class="btn-group ml-2" role="group" aria-label="Clear result actions">
-                <button type="button" class="btn btn-outline-danger" id="clear-result-button" title="Clear result">
-                    <i class="fa fa-eraser" aria-hidden="true"></i>
-                    <span class="sr-only">Clear result</span>
-                </button>
+            <span class="btn-group ml-4" role="group" aria-label="Hide result actions">
+                <label class="mb-0">
+                    <input type="checkbox" id="hide-result-toggle"
+                        data-toggle="toggle"
+                        data-on="Hidden"
+                        data-off="Hide result"
+                        data-onstyle="danger"
+                        data-offstyle="secondary">
+                </label>
             </span>
         </span>
         <pre class="card mt-3"><code id="output" class="json card-body"></code></pre>
     </div>
-    <script type="text/javascript">
-        const $ = require('jquery');
-        bootstrap = require('bootstrap');
-
-        $(function () { require('./window.js'); });
-    </script>
 </body>
 </html>
