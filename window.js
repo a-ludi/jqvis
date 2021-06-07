@@ -1,5 +1,10 @@
 const { promisify } = require('util');
 const { ipcRenderer } = require('electron');
+const fsSync = require('fs');
+const fs = require('fs').promises;
+const temp = require('temp');
+const process = require('process');
+const os = require('os');
 const { dirname } = require('path');
 const child_process = require('child_process');
 const isEmpty = require('lodash.isempty');
@@ -15,12 +20,12 @@ let jqOptions;
 let alertsInitialized;
 let isLoading;
 let lastResult = null;
+let tempInput = false;
 
 const jqFlags = [
     'compact-output',
     'slurp',
     'raw-output',
-    'sort-keys',
     'sort-keys',
     'ascii-output',
     'join-output',
@@ -298,7 +303,19 @@ function showResult(result) {
     else
         $('#output').text(result);
 
-    $('.result-actions').css('display', 'inline');
+    $('.result-actions [disabled]').prop('disabled', false);
+}
+
+function newWindow(params) {
+    const finalParams = Object.assign({
+        inputFile,
+        query,
+        jqOptions: JSON.stringify(jqOptions),
+        tempInput: false,
+    }, params);
+    const urlParams = new URLSearchParams(finalParams);
+
+    window.open(`${window.location.origin}${window.location.pathname}?${urlParams}`);
 }
 
 const migrations = [
@@ -337,26 +354,67 @@ function migrateLocalStorage() {
     localStorage.setItem(`fulfilledMigrations`, JSON.stringify(fulfilledMigrations));
 }
 
+function cleanupSync()
+{
+    if (!tempInput)
+        return;
+
+    console.log(`Deleting temp file ${inputFile}`);
+    fsSync.unlinkSync(inputFile);
+}
+
 function load() {
+    const params = new URLSearchParams(window.location.search);
     migrateLocalStorage();
 
-    setInputFile(localStorage.getItem('inputFile'));
-    query = localStorage.getItem('lastQuery');
-    jqOptions = JSON.parse(localStorage.getItem('jqOptions') || '{}');
+    if (params.has("inputFile"))
+        setInputFile(params.get("inputFile"));
+    else
+        setInputFile(localStorage.getItem('inputFile'));
+
+    if (params.has("tempInput") && params.get("tempInput") === "true")
+    {
+        console.log("Setting up temporary input");
+        tempInput = true;
+        process.addListener('exit', function() {
+            try {
+                cleanupSync();
+            } catch(err) {
+                console.warn("Fail to clean temporary files on exit : ", err);
+                throw err;
+            }
+        });
+    }
+
+    if (params.has("query"))
+        query = params.get("query");
+    else
+        query = localStorage.getItem('lastQuery');
+
+    if (params.has("jqOptions"))
+        jqOptions = JSON.parse(params.get("jqOptions"));
+    else
+        jqOptions = JSON.parse(localStorage.getItem('jqOptions') || '{}');
 
     syncOptionCheckboxes();
     updateStoredQueries();
 
-    // Register input file
-    $('#select-file').click(openFileDialog);
+    if (tempInput) {
+        // Deactivate input file
+        $('#select-file, #file-name').prop("disabled", true);
+    } else {
+        // Register input file
+        $('#select-file').click(openFileDialog);
 
-    ipcRenderer.on('fileNames', (event, fileNames) => {
-        setInputFile(fileNames[0]);
-    });
+        ipcRenderer.on('fileNames', (event, fileNames) => {
+            setInputFile(fileNames[0]);
+        });
 
-    $('#file-name').change(function () {
-        setInputFile($(this).val());
-    });
+        $('#file-name').change(function () {
+            setInputFile($(this).val());
+        });
+    }
+
 
     jqFlags.forEach((optionName) => {
         $('#flags-' + optionName).on('change', function() {
@@ -466,6 +524,25 @@ function load() {
 
     $('#save-result-button').click(async function(event) {
         writeFileDialog(lastResult);
+    });
+
+    $('#clear-result-button').click(async function(event) {
+        showResult("");
+    });
+
+    $('#new-window').click(async function(event) {
+        newWindow();
+    });
+
+    $('#act-on-result').click(async function(event) {
+        const outputFile = temp.path({
+            dir: os.tmpdir(),
+            prefix: 'jqvis.',
+            suffix: '.json',
+        });
+        await fs.writeFile(outputFile, lastResult);
+
+        newWindow({ inputFile: outputFile, tempInput: true });
     });
 
     $('#hide-result-toggle').change(function() {

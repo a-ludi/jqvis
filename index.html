@@ -208,17 +208,33 @@
 
         <label class="text-secondary font-weight-bold">Result:</label>
         <span class="result-actions btn-toolbar mx-2" role="toolbar" aria-label="Result actions">
-            <span class="btn-group" role="group" aria-label="Store result actions">
-                <button type="button" class="btn btn-primary" id="copy-result-button" title="Copy result to clipboard">
+            <span class="btn-group mx-1" role="group" aria-label="Store result actions">
+                <button type="button" class="btn btn-primary" id="copy-result-button" title="Copy result to clipboard" disabled="">
                     <i class="fa fa-clipboard" aria-hidden="true"></i>
                     <span class="sr-only">Copy result to clipboard</span>
                 </button>
-                <button type="button" class="btn btn-primary" id="save-result-button" title="Save result to file">
+                <button type="button" class="btn btn-primary" id="save-result-button" title="Save result to file" disabled="">
                     <i class="fa fa-floppy-o" aria-hidden="true"></i>
                     <span class="sr-only">Save result to file</span>
                 </button>
             </span>
-            <span class="btn-group ml-4" role="group" aria-label="Hide result actions">
+            <span class="btn-group mx-1" role="group" aria-label="New window actions">
+                <button type="button" class="btn btn-secondary" id="new-window" title="Duplicate window">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    <span class="sr-only">Duplicate window</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="act-on-result" title="Act on result" disabled="">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                    <span class="sr-only">Act on result</span>
+                </button>
+            </span>
+            <span class="btn-group mx-1" role="group" aria-label="Clear result actions">
+                <button type="button" class="btn btn-outline-danger" id="clear-result-button" title="Clear result" disabled="">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    <span class="sr-only">Clear result</span>
+                </button>
+            </span>
+            <span class="btn-group mx-1" role="group" aria-label="Hide result actions">
                 <label class="mb-0">
                     <input type="checkbox" id="hide-result-toggle"
                         data-toggle="toggle"
