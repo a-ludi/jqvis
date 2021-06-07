@@ -395,7 +395,7 @@ function load() {
     });
 
     // Trigger jq execution on ctrl+enter
-    $('#query-form, #query-editor').keyup(function (event) {
+    $(window).keyup(function (event) {
         if (event.ctrlKey && event.key == 'Enter')
         {
             $('#query-form').submit();
