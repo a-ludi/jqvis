@@ -401,6 +401,11 @@ function load() {
             $('#query-form').submit();
             event.preventDefault();
         }
+        else if (event.key == 'Esc')
+        {
+            cancelJq();
+            event.preventDefault();
+        }
     });
 
     // Execute jq
