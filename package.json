@@ -19,14 +19,14 @@
     "bootstrap": "^4.6.0",
     "bootstrap-toggle": "^2.2.2",
     "font-awesome": "^4.7.0",
-    "highlight.js": "^10.7.2",
+    "highlight.js": "^10.7.3",
     "jquery": "^3.6.0",
     "lodash.isempty": "^4.4.0",
     "popper.js": "^1.16.1",
     "temp": "^0.9.4"
   },
   "devDependencies": {
-    "electron": "^10.4.5"
+    "electron": "^10.4.7"
   },
   "peerDependencies": {
     "electron": ">=9.3.1"
